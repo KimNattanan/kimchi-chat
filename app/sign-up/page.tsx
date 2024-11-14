@@ -2,12 +2,13 @@
 
 import { Router } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useActionState  } from "react";
+import { useState  } from "react";
 import { signUpAction } from "../actions";
+import { useFormState } from "react-dom";
 
 export default function Index() {
   const router=useRouter();
-  const [submitState,submitAction] = useActionState(signUpAction,{message:'',error:''});
+  const [submitState,submitAction] = useFormState(signUpAction,{message:'',error:''});
 
   return (
     <div className="flex h-screen flex-col bg-amber-100 justify-center items-center">

@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useActionState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { sendMsg } from "@/utils/chatService"
+import { useFormState } from "react-dom";
 
 export function MessageBox({userId, msg,className='',ref=null}: any){
   return(
@@ -27,7 +28,7 @@ export function ChatBox(){
   const [msgs,setMsgs]=useState([{userId:0,msg:"yo!yo!\n\n\n\n!yo!yo!yo!yo!yo!yo!yo!yo!yo!"},{userId:0,msg:"msg1"},{userId:0,msg:"msg2"},{userId:0,msg:"msg3"}]);
   const [msgPos,setMsgPos]=useState([0,0,0,0]);
   const [msgRef,setMsgRef]=useState([useRef(null),useRef(null),useRef(null),useRef(null)]);
-  const [sendState,sendAction]=useActionState(sendMsg,{msg:''});
+  const [sendState,sendAction]=useFormState(sendMsg,{msg:''});
 
   useEffect(()=>{
     // let sum=0;
