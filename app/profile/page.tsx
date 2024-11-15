@@ -5,11 +5,13 @@ import { updProfile, readAccountCookie, getAccountFromUserId, getStorageFile } f
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+const defaultProfileUrl = '/cat.jpg'
+
 export default function Index() {
 
   const router = useRouter();
   const [curName,setCurName] = useState('');
-  const [curImg,setCurImg] = useState('/cat.jpg');
+  const [curImg,setCurImg] = useState(defaultProfileUrl);
   const [hideSave,setHideSave] = useState(false);
 
   const previewImage = (input: React.ChangeEvent<HTMLInputElement>)=>{
@@ -20,6 +22,7 @@ export default function Index() {
       }
       reader.readAsDataURL(input.target.files[0]);
     }
+    else setCurImg(defaultProfileUrl);
   }
 
   const initCurName = async()=>{
