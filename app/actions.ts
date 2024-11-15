@@ -101,12 +101,17 @@ export async function getAccountFromUserId(userId: string){
 }
 export async function getStorageFile(bucket: string, fname: string){
   const supabase = await createClient();
-  const { data:dt2, error } = await supabase.storage.from('bucket').exists(fname);
-  if(error){
-    console.log(error);
-    return null;
+
+  const { data:dt1, error } = await supabase.storage.from(bucket)
+                                                    .list();
+  if (error) {
+    console.error(error)
+    return null
   }
-  if(!dt2) return null;
+
+  const imgs = dt1.filter(item => item.name === fname)
+  if(imgs.length==0) return null;
+
   const { data } = supabase.storage.from(bucket)
                                    .getPublicUrl(fname);
   return data.publicUrl;
