@@ -1,12 +1,13 @@
 'use client'
 
-import { Router } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Index() {
-
+  const router = useRouter();
   return (
-    <div className="flex h-screen flex-col bg-amber-100 justify-center items-center">
+    <div className="flex h-screen flex-col justify-center items-center">
       Home!!
+      <button className="font-bold" onClick={()=>router.push('/profile')}>profile</button>
     </div>
   );
 }

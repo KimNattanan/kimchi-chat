@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={GeistMono.className} suppressHydrationWarning>
-      <body className="bg-background text-foreground selection:bg-rose-300">
+      <body className="bg-amber-100 text-foreground selection:bg-rose-300">
         {children}
       </body>
     </html>

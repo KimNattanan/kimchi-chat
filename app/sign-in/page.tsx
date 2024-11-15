@@ -3,38 +3,38 @@
 import { Router } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState  } from "react";
-import { useFormState } from "react-dom";
 import { signInAction } from "../actions";
+import { useFormState } from "react-dom";
 
 export default function Index() {
   const router=useRouter();
   const [submitState,submitAction] = useFormState(signInAction,{message:'',error:''});
 
   return (
-    <div className="flex h-screen flex-col bg-amber-100 justify-center items-center">
-      <div className="w-min">
-        <div className="w-full relative h-6">
+    <div className="flex h-dvh justify-center items-center">
+      <div className="w-screen mw412:w-min">
+        <div className="w-screen relative h-6 mw412:w-full">
           <button
-            className="bg-slate-500 absolute ml-5 right-0 px-4 my-1 rounded-full text-xs text-white"
+            className="bg-slate-500 absolute right-0 px-4 my-1 rounded-full text-xs text-white"
             onClick={()=>router.push('/')}
           >
             Back
           </button>
         </div>
-        <form action={submitAction} className="py-10 px-10 border-y-2 border-green-800">
-          <div className="flex font-bold my-2 w-96">
+        <form action={submitAction} className="p-10 border-y-2 border-green-800">
+          <div className="flex font-bold my-2">
             <label htmlFor="userId">UserId:</label>
             <input
-              className="ml-4 flex-1 font-normal"
+              className="ml-4 flex-1 font-normal min-w-0"
               type="text"
               name="userId"
               id="userId"
             />
           </div>
-          <div className="flex font-bold my-2 w-96">
+          <div className="flex font-bold my-2">
             <label htmlFor="password">Password:</label>
             <input
-              className="ml-4 flex-1 font-normal"
+              className="ml-4 flex-1 font-normal min-w-0"
               type="password"
               name="password"
               id="password"
