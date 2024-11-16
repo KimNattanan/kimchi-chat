@@ -1,10 +1,8 @@
 'use client'
 
 import { useState, useEffect, useRef, MutableRefObject, RefObject } from "react";
-import { sendMsg } from "@/utils/chatService"
-import { useFormState } from "react-dom";
 import { createClient } from "@/utils/supabase/client";
-import { getAccountFromUserId, getStorageFile } from "@/app/actions";
+import { getAccountFromUserId, getStorageFile } from "@/app/actions-client";
 
 
 export function MessageBox(
@@ -35,7 +33,6 @@ const defProfile = '/corgi.png';
 
 export function ChatBox({room,userId}:{room:string,userId:string}){
   const [msgs,setMsgs]=useState<any[]>([]);
-  const [sendState,sendAction]=useFormState(sendMsg,{msg:''});
   const [loadRange,setLoadRange]=useState({l:-1,r:-1});
   const [showLoadMore,setShowLoadMore]=useState(false);
 
@@ -122,6 +119,25 @@ export function ChatBox({room,userId}:{room:string,userId:string}){
     }
   },[]);
 
+  const sendMsg=async(formData:FormData)=>{
+    const room = formData.get('room')?.toString();
+    const userId = formData.get('userId')?.toString();
+    const msg = formData.get('msg')?.toString();
+    if(!msg||!userId||!room) return;
+  
+    const supabase = createClient();
+    const { data, error } = await supabase.from('messages')
+                                          .insert([{
+                                            room: room,
+                                            userId: userId,
+                                            message: msg
+                                          }]);
+    if(error){
+      console.log("error:",error);
+      return;
+    }
+  }
+
   return(
     <div className="relative flex flex-col w-full h-full bg-indigo-800 bg-opacity-10">
       
@@ -148,7 +164,7 @@ export function ChatBox({room,userId}:{room:string,userId:string}){
                       ${showLoadMore?'hidden':''}`}
         >Loading...</div>
       </div>
-      <form action={sendAction} className={`flex h-7 ${showLoadMore?'':'hidden'}`}>
+      <form action={sendMsg} className={`flex h-7 ${showLoadMore?'':'hidden'}`}>
         <input
           type="text"
           name="room"

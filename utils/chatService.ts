@@ -1,16 +1,14 @@
-'use server'
+'use client'
 
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
 
-export async function sendMsg(prevState: any, formData:FormData){
+export async function sendMsg(formData:FormData){
   const room = formData.get('room')?.toString();
   const userId = formData.get('userId')?.toString();
   const msg = formData.get('msg')?.toString();
-  if(!msg||!userId||!room) return {msg:'did not send'};
+  if(!msg||!userId||!room) return;
 
-  console.log(formData);
-
-  const supabase = await createClient();
+  const supabase = createClient();
   const { data, error } = await supabase.from('messages')
                                         .insert([{
                                           room: room,
@@ -19,8 +17,6 @@ export async function sendMsg(prevState: any, formData:FormData){
                                         }]);
   if(error){
     console.log("error:",error);
-    return {msg:'error'}
+    return;
   }
-
-  return {msg:'sent'};
 }
