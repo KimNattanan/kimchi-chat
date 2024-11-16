@@ -8,22 +8,8 @@ import { getAccountFromUserId, getStorageFile } from "@/app/actions";
 
 
 export function MessageBox(
-  {userId, message}:
-  {userId: string, message: string}){
-    
-    const [userDisplay,setUserDisplay] = useState('');
-    const [img,setImg] = useState('/corgi.png');
-    
-    const effectAsync=async()=>{
-      const fullacc=await getAccountFromUserId(userId);
-      setUserDisplay(fullacc.display_name);
-      const imgPath = await getStorageFile('profiles',fullacc.imgPath);
-      if(imgPath) setImg(imgPath);
-    }
-    useEffect(()=>{
-      effectAsync();
-    },[])
-    
+  {userDisplay, img, message}:
+  {userDisplay: string, img: string, message: string}){
     return(
       <div className='flex mx-16 my-16 cursor-default'>
       <img
@@ -45,25 +31,17 @@ export function MessageBox(
 
 
 const batchSize = 5;
+const defProfile = '/corgi.png';
 
 export function ChatBox({room,userId}:{room:string,userId:string}){
   const [msgs,setMsgs]=useState<any[]>([]);
   const [sendState,sendAction]=useFormState(sendMsg,{msg:''});
   const [loadRange,setLoadRange]=useState({l:-1,r:-1});
+  const [showLoadMore,setShowLoadMore]=useState(false);
 
-  const handleMessageInsert=(payload:any)=>{
-    if(payload.room==room){
-      setMsgs((prev)=>[
-        {
-          userId: payload.userId,
-          message: payload.message
-        },
-        ...prev
-      ]);
-    }
-  }
-
+  
   const loadMoreMessage = async()=>{
+    setShowLoadMore(false);
     setLoadRange((prev)=>({l:prev.l-batchSize, r:prev.r-batchSize}));
   }
   useEffect(()=>{
@@ -81,8 +59,11 @@ export function ChatBox({room,userId}:{room:string,userId:string}){
       let arr=[] as any[];
       for(let i=data.length-1;i>=0;--i){
         if(!data[i]) continue;
+        const fullacc=await getAccountFromUserId(data[i].userId);
+        const img=await getStorageFile('profiles',fullacc.imgPath);
         arr.push({
-          userId: data[i].userId,
+          userDisplay: fullacc.display_name,
+          img: img||defProfile,
           message: data[i].message
         });
       }
@@ -91,6 +72,7 @@ export function ChatBox({room,userId}:{room:string,userId:string}){
         ...prev,
         ...arr
       ]);
+      setShowLoadMore(true);
     }
     play();
   },[loadRange]);
@@ -105,17 +87,32 @@ export function ChatBox({room,userId}:{room:string,userId:string}){
     let n=data.length;
     setLoadRange({l:n-batchSize,r:n-1});
   }
+  
+  const handleMessageInsert=async(payload:any)=>{
+    if(payload.room==room){
+      const fullacc=await getAccountFromUserId(payload.userId);
+      const img=await getStorageFile('profiles',fullacc.imgPath);
+      setMsgs((prev)=>[
+        {
+          userDisplay: fullacc.display_name,
+          img: img||defProfile,
+          message: payload.message
+        },
+        ...prev
+      ]);
+    }
+  }
 
   useEffect(()=>{
     effectAsync();
     const supabase = createClient();
     const channel = supabase.channel('messages')
-                            .on(
-                              'postgres_changes',
-                              {
-                                event: 'INSERT',
-                                schema: 'public',
-                                table: 'messages',
+    .on(
+      'postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'messages',
                               },
                               (payload)=>handleMessageInsert(payload.new)
                             ).subscribe();
@@ -136,18 +133,22 @@ export function ChatBox({room,userId}:{room:string,userId:string}){
                 key={i}
                 className={` relative transition-transform duration-1000`}
               >
-                <MessageBox userId={v.userId} message={v.message}/>
+                <MessageBox userDisplay={v.userDisplay} img={v.img} message={v.message}/>
               </div>
             )
           })
         }
         <button
           className={`bg-cyan-500 bg-opacity-40 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)] p-2 font-bold border-y-2 border-white text-white w-full mb-4
-                      ${loadRange.l>0?'':'hidden'}`}
+                      ${(loadRange.l>0&&showLoadMore)?'':'hidden'}`}
           onClick={loadMoreMessage}
         >Load More</button>
+        <div
+          className={`flex bg-rose-500 bg-opacity-40 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)] p-2 font-bold border-y-2 border-white text-white w-full mb-4 justify-center
+                      ${showLoadMore?'hidden':''}`}
+        >Loading...</div>
       </div>
-      <form action={sendAction} className="flex h-7">
+      <form action={sendAction} className={`flex h-7 ${showLoadMore?'':'hidden'}`}>
         <input
           type="text"
           name="room"
