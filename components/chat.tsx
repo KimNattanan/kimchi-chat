@@ -28,7 +28,7 @@ export function MessageBox(
 }
 
 
-const batchSize = 5;
+const batchSize = 20;
 const defProfile = '/corgi.png';
 
 export function ChatBox({room,userId}:{room:string,userId:string}){
