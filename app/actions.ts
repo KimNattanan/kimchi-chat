@@ -5,6 +5,8 @@ import { cookies } from 'next/headers'
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import axios, { AxiosResponse } from 'axios';
+import { IncomingMessage } from "http";
 
 export async function signUpAction(prevState:any, formData: FormData){
   const userId = formData.get("userId")?.toString();
@@ -165,4 +167,18 @@ export async function updProfile(formData: FormData) {
   }
 
   return redirect('/profile');
+}
+
+export async function sendChat(room: string, userId: string, message: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from('messages')
+                                        .insert([{
+                                          room: room,
+                                          userId: userId,
+                                          message: message
+                                        }]);
+  if(error){
+    console.log(error);
+    return;
+  }
 }

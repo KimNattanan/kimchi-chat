@@ -68,7 +68,31 @@
   }
 }
 
-::-webkit-scrollbar {
-  background-color: transparent;
+/* ::-webkit-scrollbar {
+  width: 3rem;
+  background: transparent
+}
+::-webkit-scrollbar-thumb {
+  background: url('/corgi.png') no-repeat center;
+  
+  background-size: cover;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+*/
+
+.scrollbar-xs::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+.scrollbar-xs::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.5)
+}
+.scrollbar-xs::-webkit-scrollbar-corner {
+  display: none;
 }
 
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none
+}

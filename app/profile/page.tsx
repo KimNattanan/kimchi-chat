@@ -4,15 +4,16 @@ import { Router } from "lucide-react";
 import { updProfile, readAccountCookie, getAccountFromUserId, getStorageFile } from "../actions"
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { NavBtn } from "@/components/buttons";
 
-const defaultProfileUrl = '/cat.jpg'
+const defaultProfileUrl = '/corgi.png'
 
 export default function Index() {
 
   const router = useRouter();
   const [curName,setCurName] = useState('');
   const [curImg,setCurImg] = useState(defaultProfileUrl);
-  const [hideSave,setHideSave] = useState(false);
+  const [saveClicked,setSaveClicked] = useState(false);
 
   const previewImage = (input: React.ChangeEvent<HTMLInputElement>)=>{
     if(input.target.files && input.target.files[0]){
@@ -29,8 +30,8 @@ export default function Index() {
     try{
       const account = await readAccountCookie();
       const info = await getAccountFromUserId(account.userId);
-      const img = await getStorageFile('profiles',info.imgPath);
       setCurName(info.display_name);
+      const img = await getStorageFile('profiles',info.imgPath);
       if(img) setCurImg(img);
 
     }catch(e){
@@ -43,18 +44,19 @@ export default function Index() {
 
   return (
     <>
-      <div className="flex flex-col justify-center min-h-dvh items-center">
-        <button
-          className="bg-slate-500 px-4 font-bold my-2 rounded-full text-xs text-white"
-          name="btn"
-          value={'home'}
-          onClick={()=>router.push('/home')}
-        >Home</button>
+      <div className="flex flex-col justify-center min-h-full items-center">
+        <NavBtn 
+          text={"Home"}
+          className={"bg-slate-500 px-4 font-bold my-2 rounded-full text-xs text-white transition-opacity"}
+          defClass=""
+          clickClass="opacity-0 hover:cursor-default"
+          path={"/home"}
+        />
         <form
           action={updProfile}
           className="flex flex-col justify-center items-center"
         >
-          <img src={curImg} className="rounded-full aspect-square w-60 bg-white object-cover"/>
+          <img src={curImg} className="rounded-full aspect-square w-60 object-cover"/>
           <label htmlFor="file"
             className="font-bold bg-opacity-50 bg-emerald-400 px-4 my-2 rounded-full hover:cursor-pointer"
           >{`> UPLOAD <`}</label>
@@ -75,10 +77,10 @@ export default function Index() {
             placeholder={curName}
           />
           <button
-            className={`font-bold ${hideSave?'hidden':''}`}
+            className={`font-bold transition-all ease-in duration-100 ${saveClicked?'opacity-0 hover:cursor-default':''}`}
             name='btn'
             value={'save'}
-            onClick={()=>setHideSave(true)}
+            onClick={()=>setSaveClicked(true)}
           >save</button>
         </form>
       </div>

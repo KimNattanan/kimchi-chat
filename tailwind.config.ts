@@ -75,6 +75,8 @@ const config = {
     },
     screens: {
       'mw412': {min: '412px'},
+      'sm': {min: '640px'},
+      'lg': {min: '1024px'},
     }
   },
   plugins: [require("tailwindcss-animate")],
