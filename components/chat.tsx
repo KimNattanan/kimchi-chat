@@ -78,7 +78,7 @@ export function ChatBox({room,userId}:{room:string,userId:string}){
         console.log('error:',error);
         return;
       }
-      let arr=[];
+      let arr=[] as any[];
       for(let i=data.length-1;i>=0;--i){
         if(!data[i]) continue;
         arr.push({
