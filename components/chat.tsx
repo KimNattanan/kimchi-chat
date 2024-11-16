@@ -141,7 +141,7 @@ export function ChatBox({room,userId}:{room:string,userId:string}){
   return(
     <div className="relative flex flex-col w-full h-full bg-indigo-800 bg-opacity-10">
       
-      <div className="flex-1 relative overflow-y-auto scrollbar-xs">
+      <div className="flex-1 relative overflow-y-auto scrollbar-xs flex flex-col-reverse">
         {
           msgs.map((v:any,i:number)=>{
             return (
@@ -164,7 +164,7 @@ export function ChatBox({room,userId}:{room:string,userId:string}){
                       ${showLoadMore?'hidden':''}`}
         >Loading...</div>
       </div>
-      <form action={sendMsg} className={`flex h-7 ${showLoadMore?'':'hidden'}`}>
+      <form action={sendMsg} className={`flex h-7 ${showLoadMore?'':''}`}>
         <input
           type="text"
           name="room"
