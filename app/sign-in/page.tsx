@@ -1,20 +1,22 @@
 'use client'
 
-import { Router } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState  } from "react";
-import { signInAction } from "../actions";
+import { useEffect, useState  } from "react";
+import { readAccountCookie, signInAction } from "@/app/actions";
 import { useFormState } from "react-dom";
 import { NavBtn } from "@/components/buttons";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Index() {
   const router=useRouter();
   const [submitState,submitAction] = useFormState(signInAction,{message:'',error:''});
   const [submitted, setSubmitted] = useState(false);
 
+  
+
   return (
     <div className="flex h-dvh justify-center items-center">
-      <div className="w-screen mw412:w-min">
+      <div className={`w-screen mw412:w-min`}>
         <div className="w-screen relative h-6 mw412:w-full">
           <NavBtn
             text="Back"

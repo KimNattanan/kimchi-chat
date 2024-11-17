@@ -1,16 +1,14 @@
 'use client'
 
-import { Router } from "lucide-react";
-import { updProfile, readAccountCookie, getAccountFromUserId, getStorageFile } from "../actions"
+import { readAccountCookie } from "@/app/actions";
+import { updProfile, getAccountFromUserId, getStorageFile } from "@/app/actions-client"
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { NavBtn } from "@/components/buttons";
 
 const defaultProfileUrl = '/corgi.png'
 
 export default function Index() {
 
-  const router = useRouter();
   const [curName,setCurName] = useState('');
   const [curImg,setCurImg] = useState(defaultProfileUrl);
   const [saveClicked,setSaveClicked] = useState(false);

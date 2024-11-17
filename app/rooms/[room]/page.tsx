@@ -1,10 +1,11 @@
 'use client'
 
 import { ChatBox } from "@/components/chat";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { readAccountCookie } from "@/app/actions";
 
-export default function Index() {
+export default function Index({ params }:{ params:any }) {
+  const _params = use(params) as any;
   const [userId, setUserId] = useState('');
   const [ready, setReady] = useState(false);
 
@@ -22,7 +23,7 @@ export default function Index() {
         style={{zIndex: -1}}
       />
       <div className="flex flex-col justify-center items-center h-full w-full lg:w-1/2">
-        {ready && <ChatBox room={"home"} userId={userId}/>}
+        {ready && <ChatBox room={_params.room} userId={userId}/>}
       </div>
     </>
   );

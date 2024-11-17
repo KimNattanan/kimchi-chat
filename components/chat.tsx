@@ -38,37 +38,34 @@ export function ChatBox({room,userId}:{room:string,userId:string}){
 
   
   const loadMoreMessage = async()=>{
-    setShowLoadMore(false);
     setLoadRange((prev)=>({l:prev.l-batchSize, r:prev.r-batchSize}));
   }
   useEffect(()=>{
     const play=async()=>{
+      setShowLoadMore(false);
       let l=loadRange.l;
       let r=loadRange.r;
       if(l<0) l=0;
-      if(l>r) return;
+      if(l>r) return setShowLoadMore(true);
       const supabase=createClient();
       const {data,error} = await supabase.from('messages').select('*',{count:'exact'}).like('room',room).range(l,r);
       if(error){
         console.log('error:',error);
-        return;
+        return setShowLoadMore(true);
       }
-      let arr=[] as any[];
       for(let i=data.length-1;i>=0;--i){
         if(!data[i]) continue;
         const fullacc=await getAccountFromUserId(data[i].userId);
         const img=await getStorageFile('profiles',fullacc.imgPath);
-        arr.push({
-          userDisplay: fullacc.display_name,
-          img: img||defProfile,
-          message: data[i].message
-        });
+        setMsgs((prev)=>[
+          ...prev,
+          {
+            userDisplay: fullacc.display_name,
+            img: img||defProfile,
+            message: data[i].message
+          }
+        ]);
       }
-      if(arr.length==0) return;
-      setMsgs((prev)=>[
-        ...prev,
-        ...arr
-      ]);
       setShowLoadMore(true);
     }
     play();

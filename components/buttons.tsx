@@ -11,7 +11,6 @@ export function NavBtn(
   return(
     <button className={`${className} ${clicked?clickClass:defClass}`}
       onClick={()=>{
-        console.log('click!!!!!!!!!!!!!!!');
         setClicked(true);
         router.push(path);
       }}
