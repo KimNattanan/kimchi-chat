@@ -9,6 +9,9 @@ export const metadata = {
   metadataBase: new URL(defaultUrl),
   title: "Online Chat | Kimchi",
   description: "Next.js with Supabase",
+  openGraph:{
+    images: "https://kimchi-nyabe-chat.vercel.app/corgi2.jpg",
+  },
 };
 
 export default function RootLayout({
