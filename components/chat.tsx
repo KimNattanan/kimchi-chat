@@ -8,8 +8,15 @@ import { getAccountFromUserId, getStorageFile } from "@/app/actions-client";
 export function MessageBox(
   {userDisplay, img, message}:
   {userDisplay: string, img: string, message: string}){
-    return(
-      <div className='flex mx-16 my-16 cursor-default'>
+  
+  const [animIn, setAnimIn] = useState(false);
+  
+  useEffect(()=>{
+    setAnimIn(true);
+  },[]);
+
+  return(
+    <div className={`flex mx-16 my-16 cursor-default transition-transform ${animIn?'':'-translate-x-96'}`}>
       <img
         className="rounded-full mr-5 w-10 h-10 select-none object-cover drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,1)]"
         src={img}
@@ -62,7 +69,8 @@ export function ChatBox({room,userId}:{room:string,userId:string}){
           {
             userDisplay: fullacc.display_name,
             img: img||defProfile,
-            message: data[i].message
+            message: data[i].message,
+            id: data[i].id
           }
         ]);
       }
@@ -90,7 +98,8 @@ export function ChatBox({room,userId}:{room:string,userId:string}){
         {
           userDisplay: fullacc.display_name,
           img: img||defProfile,
-          message: payload.message
+          message: payload.message,
+          id: payload.id
         },
         ...prev
       ]);
@@ -121,7 +130,7 @@ export function ChatBox({room,userId}:{room:string,userId:string}){
     const userId = formData.get('userId')?.toString();
     const msg = formData.get('msg')?.toString();
     if(!msg||!userId||!room) return;
-  
+
     const supabase = createClient();
     const { data, error } = await supabase.from('messages')
                                           .insert([{
@@ -143,7 +152,7 @@ export function ChatBox({room,userId}:{room:string,userId:string}){
           msgs.map((v:any,i:number)=>{
             return (
               <div
-                key={i}
+                key={v.id}
                 className={` relative transition-transform duration-1000`}
               >
                 <MessageBox userDisplay={v.userDisplay} img={v.img} message={v.message}/>

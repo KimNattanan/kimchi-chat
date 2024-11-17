@@ -44,9 +44,10 @@ export default function MenuBar() {
           />
         </label>
         <input
-          className="ml-2 pl-4 min-w-0
+          className='ml-2 pl-4 min-w-0
                      w-0 opacity-0 focus:opacity-100 hover:opacity-100 focus:flex-1 hover:flex-1 transition-all
-                     font-light cursor-default bg-gray-600 rounded-full bg-opacity-20 focus:outline-none text-white text-opacity-100 placeholder:text-white placeholder:text-opacity-80"
+                     font-light cursor-default bg-gray-600 rounded-full bg-opacity-20 focus:outline-none text-white text-opacity-100 placeholder:text-white placeholder:text-opacity-80
+                    '
           type="text"
           id="searchInput"
           name="searchInput"
