@@ -55,7 +55,7 @@ export function ChatBox({room,userId}:{room:string,userId:string}){
       if(l<0) l=0;
       if(l>r) return setShowLoadMore(true);
       const supabase=createClient();
-      const {data,error} = await supabase.from('messages').select('*',{count:'exact'}).like('room',room).range(l,r);
+      const {data,error} = await supabase.from('messages').select('*',{count:'exact'}).like('room',room).range(l,r).order('id',{ ascending: true });
       if(error){
         console.log('error:',error);
         return setShowLoadMore(true);
